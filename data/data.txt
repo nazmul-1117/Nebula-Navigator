@@ -1,0 +1,50 @@
+001|Proxima Centauri|Red Dwarf|4.24|Closest star
+002|Alpha Centauri A|Main Sequence|4.37|Sun-like star
+003|Alpha Centauri B|Main Sequence|4.37|Companion star
+004|Barnard's Star|Red Dwarf|5.96|Nearby dwarf
+005|Wolf 359|Red Dwarf|7.86|Very faint
+006|Luyten 726-8 A|Red Dwarf|8.73|Binary star
+007|Luyten 726-8 B|Red Dwarf|8.73|Companion star
+008|Sirius A|Main Sequence|8.6|Brightest star
+009|Sirius B|White Dwarf|8.6|Companion star
+010|Ross 154|Red Dwarf|9.68|Nearby dwarf
+011|Ross 248|Red Dwarf|10.3|Faint star
+012|Epsilon Eridani|K-type Main Sequence|10.5|Nearby system
+013|Lacaille 9352|Red Dwarf|10.7|Nearby dwarf
+014|Ross 128|Red Dwarf|11|Nearby dwarf
+015|EZ Aquarii A|Red Dwarf|11.3|Triple system
+016|EZ Aquarii B|Red Dwarf|11.3|Companion star
+017|EZ Aquarii C|Red Dwarf|11.3|Companion star
+018|Procyon A|Main Sequence|11.4|Bright star
+019|Procyon B|White Dwarf|11.4|Companion star
+020|61 Cygni A|K-type Main Sequence|11.4|Binary star
+021|61 Cygni B|K-type Main Sequence|11.4|Companion star
+022|Struve 2398 A|Red Dwarf|11.5|Binary star
+023|Struve 2398 B|Red Dwarf|11.5|Companion star
+024|Epsilon Indi A|K-type Main Sequence|11.9|Nearby star
+025|Epsilon Indi Ba|Brown Dwarf|11.9|Companion star
+026|Epsilon Indi Bb|Brown Dwarf|11.9|Companion star
+027|Tau Ceti|G-type Main Sequence|11.9|Sun-like star
+028|Kapteyn's Star|Red Subdwarf|12.8|High proper motion
+029|Kruger 60 A|Red Dwarf|13.1|Binary star
+030|Kruger 60 B|Red Dwarf|13.1|Companion star
+031|Wolf 1061|Red Dwarf|14.1|Nearby dwarf
+032|Lalande 21185|Red Dwarf|8.3|Nearby dwarf
+033|Altair|Main Sequence|16.7|Bright star
+034|Fomalhaut|A-type Main Sequence|25|Bright star
+035|Vega|A-type Main Sequence|25|Lyra star
+036|Arcturus|Red Giant|36.7|Bright giant
+037|Capella|G-type Giant|42.9|Binary giant
+038|Aldebaran|Red Giant|65|Taurus eye
+039|Spica|Blue Giant|250|Binary system
+040|Regulus|Blue-White Main Sequence|79|Leo star
+041|Deneb|Blue Supergiant|2600|Cygnus bright
+042|Betelgeuse|Red Supergiant|642|Orion giant
+043|Rigel|Blue Supergiant|860|Orion bright
+044|Polaris|Yellow Supergiant|433|North Star
+045|Antares|Red Supergiant|550|Scorpius heart
+046|Canopus|Bright Giant|310|Carina star
+047|Bellatrix|Blue Giant|250|Orion star
+048|Saiph|Blue Supergiant|720|Orion star
+049|Mimosa|Blue Giant|350|Crux star
+050|Alnitak|Blue Supergiant|1260|Orion belt

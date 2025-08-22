@@ -1,8 +1,11 @@
 #!/bin/bash
 
 # File paths
-USERS_FILE="../data/users-default.txt"
+USERS_FILE="../data/users.txt"
 DATA_FILE="../data/data.txt"
+
+# Current user
+CURRENT_USER=""
 
 # Colors
 RED="\e[31m"
@@ -15,13 +18,12 @@ WHITE="\e[37m"
 RESET="\e[0m"
 
 TAB="$(printf '\t\t\t\t\t')"
-LINE="$(printf '=%.0s' {1..45})"
+LINE="$(printf '=%.0s' {1..40})"
 
 # Terminal width
 TERM_WIDTH=$(tput cols)
 SCREEN_WIDTH=$(( term_width * 70 / 100 ))
 
-# Clear screen and print header
 header() {
     clear
     echo -e ""
@@ -33,7 +35,6 @@ header() {
     echo -e "\t\t\t\t\t${CYAN}**************************************************************************${RESET}"
 }
 
-# Login function
 login() {
     attempts=0
     while [ $attempts -lt 3 ]; do
@@ -44,6 +45,7 @@ login() {
         echo
         if grep -q "^$username|$password$" "$USERS_FILE"; then
             echo -e "${TAB}${GREEN}Login successful!${RESET}"
+            CURRENT_USER="$username"
             sleep 1
             mainMenu
             # return 0
@@ -58,7 +60,6 @@ login() {
 
 }
 
-# Menu display
 menu() {
     header
     echo -e "${TAB}${YELLOW}[1]${RESET} Add New Star"
@@ -73,7 +74,6 @@ menu() {
     echo -n "${TAB}Choose an option [1-8]: "
 }
 
-# Add a new star
 add_star() {
     header
     echo -e "${TAB}\t\t\t${YELLOW}ADD NEW STAR${RESET}"
@@ -81,20 +81,19 @@ add_star() {
     printf -v ${TAB} id "%03d" $id
     read -p "${TAB}Star Name: " name
     read -p "${TAB}Star Type: " type
-    read -p "${TAB}Distance (in km): " distance
+    read -p "${TAB}Distance (in ly): " distance
     read -p "${TAB}Short Description: " desc
     echo "$id|$name|$type|$distance|$desc" >> "$DATA_FILE"
     echo -e "${TAB}${GREEN}Star added successfully!${RESET}"
     read -p "${TAB}Press Enter to return to menu..."
 }
 
-# View all stars
 view_stars() {
     header
     
     echo -e "${TAB}ALL STARS RECORDED"
     echo -e "${LINE}${LINE}${LINE}"
-    echo -e "${WHITE}ID${RESET} |\t${WHITE}NAME${RESET} \t|\t ${WHITE}TYPE${RESET} \t|\t ${WHITE}DISTANCE${RESET} |${TAB} ${WHITE}DESCRIPTION${RESET}"
+    echo -e "${WHITE}ID${RESET} |\t${WHITE}NAME${RESET} \t|\t ${WHITE}TYPE${RESET} \t|\t ${WHITE}DISTANCE(Light Years)${RESET} |${TAB} ${WHITE}DESCRIPTION${RESET}"
     echo -e "${LINE}${LINE}${LINE}"
 
     if [ -s "$DATA_FILE" ]; then
@@ -107,7 +106,6 @@ view_stars() {
     read -p "Press Enter to return to menu..."
 }
 
-# Search star by name
 search_star() {
     header
     echo -e "${TAB}${YELLOW}SEARCH STAR${RESET}"
@@ -127,7 +125,7 @@ search_star() {
             echo " ID:          $id"
             echo " Name:        $name"
             echo " Type:        $type"
-            echo " Distance:    $distance km"
+            echo " Distance:    $distance ly"
             echo " Description: $desc"
             echo -e "${LINE}${LINE}${LINE}"
         done
@@ -139,7 +137,6 @@ search_star() {
     read -p " Press Enter to return to menu..."
 }
 
-# Edit star info
 edit_star() {
     header
     echo "EDIT STAR INFO"
@@ -151,7 +148,7 @@ edit_star() {
         grep -v "^$id|" "$DATA_FILE" > temp.txt
         read -p "New Name: " name
         read -p "New Type: " type
-        read -p "New Distance (km): " distance
+        read -p "New Distance (ly): " distance
         read -p "New Description: " desc
         echo "$id|$name|$type|$distance|$desc" >> temp.txt
         mv temp.txt "$DATA_FILE"
@@ -162,32 +159,63 @@ edit_star() {
     read -p "Press Enter to return to menu..."
 }
 
-# Delete star
 delete_star() {
     header
     echo "DELETE STAR"
     read -p "Enter Star ID to delete: " id
-    if grep -q "^$id|" "$DATA_FILE"; then
-        grep -v "^$id|" "$DATA_FILE" > temp.txt && mv temp.txt "$DATA_FILE"
-        echo -e "${GREEN}Star deleted successfully!${RESET}"
+    
+    record=$(grep "^$id|" "$DATA_FILE")
+    if [ -n "$record" ]; then
+        echo "Star found:"
+        echo -e "${LINE}${LINE}${LINE}"
+        echo "$record"
+        echo -e "${LINE}${LINE}${LINE}"
+        
+        read -p "Are you sure you want to delete this star? (y/n): " confirm
+        if [[ "$confirm" =~ ^[Yy]$ ]]; then
+            # Ask for the current user’s password again
+            echo -e -n "${RED}Enter your password to confirm: ${RED}"
+            read password
+            echo
+            
+            if grep -q "^$CURRENT_USER|$password$" "$USERS_FILE"; then
+                grep -v "^$id|" "$DATA_FILE" > temp.txt && mv temp.txt "$DATA_FILE"
+                echo -e "${GREEN}Star deleted successfully!${RESET}"
+            else
+                echo -e "${RED}Incorrect password! Deletion aborted.${RESET}"
+            fi
+        else
+            echo "Deletion cancelled."
+        fi
     else
         echo -e "${RED}Star ID not found!${RESET}"
     fi
+    
     read -p "Press Enter to return to menu..."
 }
 
-# Distance check
 distance_star() {
     header
     echo "DISTANCE CHECK"
     read -p "Enter Star Name: " name
+    
+    # Case-insensitive search
     match=$(grep -i "$name" "$DATA_FILE")
+    
     if [ "$match" ]; then
-        distance=$(echo "$match" | cut -d '|' -f 4)
-        echo "Star $name is approximately $distance km away."
+        echo "Matching star(s):"
+        echo "$match" | awk -F "|" '{print "ID: "$1" | Name: "$2" | Distance: "$4" " "ly"}'
+        
+        echo
+        echo "Sorting all stars by distance..."
+        echo -e "${LINE}${LINE}${LINE}"
+        
+        # Sort by distance column (field 4) numerically, print only ID, Name, Distance
+        sort -t "|" -k4 -n "$DATA_FILE" | awk -F "|" '{print "ID: "$1" | Name: "$2" | Distance: "$4" " "ly"}'
     else
         echo -e "${RED}Star not found!${RESET}"
     fi
+    
     read -p "Press Enter to return to menu..."
 }
 
@@ -230,7 +258,8 @@ mainMenu() {
 # Main Program
 function main() {
   while true; do
-      mainMenu
+      signUpMenu
+      # mainMenu
   done
 }
 
