@@ -14,6 +14,9 @@ CYAN="\e[36m"
 WHITE="\e[37m"
 RESET="\e[0m"
 
+TAB="$(printf '\t\t\t\t\t')"
+LINE="$(printf '=%.0s' {1..45})"
+
 # Terminal width
 TERM_WIDTH=$(tput cols)
 SCREEN_WIDTH=$(( term_width * 70 / 100 ))
@@ -21,9 +24,13 @@ SCREEN_WIDTH=$(( term_width * 70 / 100 ))
 # Clear screen and print header
 header() {
     clear
-    echo -e "\t\t\t\t\t${CYAN}=========================================================================${RESET}"
-    echo -e "\t\t\t\t\t\t${CYAN}              GALAXY STAR RECORD SYSTEM        ${RESET}"
-    echo -e "\t\t\t\t\t${CYAN}=========================================================================${RESET}"
+    echo -e ""
+    echo -e "\t\t\t\t\t${CYAN}**************************************************************************${RESET}"
+    echo -e "\t\t\t\t\t${CYAN}**\t              Nebula Navigator      \t\t\t\t**${RESET}"
+    echo -e "\t\t\t\t\t${CYAN}**\t              A GALAXY STAR RECORD SYSTEM      \t\t\t**${RESET}"
+    echo -e "\t\t\t\t\t${CYAN}**\t              Developed by: Nazmul and Fuad      \t\t**${RESET}"
+    echo -e "\t\t\t\t\t${CYAN}**\t              Green University Bangladesh      \t\t\t**${RESET}"
+    echo -e "\t\t\t\t\t${CYAN}**************************************************************************${RESET}"
 }
 
 # Login function
@@ -31,80 +38,105 @@ login() {
     attempts=0
     while [ $attempts -lt 3 ]; do
         header
-        echo -e "${YELLOW}LOGIN${RESET}"
-        read -p "Username: " username
-        read -s -p "Password: " password
+        echo -e "${TAB}${YELLOW}LOGIN${RESET}"
+        read -p "${TAB}Username: " username
+        read -s -p "${TAB}Password: " password
         echo
         if grep -q "^$username|$password$" "$USERS_FILE"; then
-            echo -e "${GREEN}Login successful!${RESET}"
+            echo -e "${TAB}${GREEN}Login successful!${RESET}"
             sleep 1
-            return 0
+            mainMenu
+            # return 0
         else
-            echo -e "${RED}Invalid credentials!${RESET}"
+            echo -e "${TAB}${RED}Invalid credentials!${RESET}"
             ((attempts++))
             sleep 1
         fi
     done
-    echo -e "${RED}Too many failed attempts. Exiting.${RESET}"
+    echo -e "${TAB}${RED}Too many failed attempts. Exiting.${RESET}"
     exit 1
+
 }
 
 # Menu display
 menu() {
     header
-    echo -e "${YELLOW}[1]${RESET} Add New Star"
-    echo -e "${CYAN}[2]${RESET} View All Stars"
-    echo -e "${MAGENTA}[3]${RESET} Search Star by Name"
-    echo -e "${BLUE}[4]${RESET} Edit Star Info"
-    echo -e "${RED}[5]${RESET} Delete Star"
-    echo -e "${GREEN}[6]${RESET} Show Distance of a Star"
-    echo -e "${WHITE}[7]${RESET} Exit"
-    echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-    echo -n "Choose an option [1-7]: "
+    echo -e "${TAB}${YELLOW}[1]${RESET} Add New Star"
+    echo -e "${TAB}${CYAN}[2]${RESET} View All Stars"
+    echo -e "${TAB}${MAGENTA}[3]${RESET} Search Star by Name"
+    echo -e "${TAB}${BLUE}[4]${RESET} Edit Star Info"
+    echo -e "${TAB}${RED}[5]${RESET} Delete Star"
+    echo -e "${TAB}${GREEN}[6]${RESET} Show Distance of a Star"
+    echo -e "${TAB}${WHITE}[7]${RESET} Logout"
+    echo -e "${TAB}${WHITE}[8]${RESET} Exit"
+    echo "${TAB}${LINE}"
+    echo -n "${TAB}Choose an option [1-8]: "
 }
 
 # Add a new star
 add_star() {
     header
-    echo "ADD NEW STAR"
+    echo -e "${TAB}\t\t\t${YELLOW}ADD NEW STAR${RESET}"
     id=$(($(wc -l < "$DATA_FILE") + 1))
-    printf -v id "%03d" $id
-    read -p "Star Name: " name
-    read -p "Star Type: " type
-    read -p "Distance (in km): " distance
-    read -p "Short Description: " desc
+    printf -v ${TAB} id "%03d" $id
+    read -p "${TAB}Star Name: " name
+    read -p "${TAB}Star Type: " type
+    read -p "${TAB}Distance (in km): " distance
+    read -p "${TAB}Short Description: " desc
     echo "$id|$name|$type|$distance|$desc" >> "$DATA_FILE"
-    echo -e "${GREEN}Star added successfully!${RESET}"
-    read -p "Press Enter to return to menu..."
+    echo -e "${TAB}${GREEN}Star added successfully!${RESET}"
+    read -p "${TAB}Press Enter to return to menu..."
 }
 
 # View all stars
 view_stars() {
     header
-    echo "ALL STARS RECORDED"
-    echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+    
+    echo -e "${TAB}ALL STARS RECORDED"
+    echo -e "${LINE}${LINE}${LINE}"
+    echo -e "${WHITE}ID${RESET} |\t${WHITE}NAME${RESET} \t|\t ${WHITE}TYPE${RESET} \t|\t ${WHITE}DISTANCE${RESET} |${TAB} ${WHITE}DESCRIPTION${RESET}"
+    echo -e "${LINE}${LINE}${LINE}"
+
     if [ -s "$DATA_FILE" ]; then
         sort -t '|' -k1n "$DATA_FILE" | column -s '|' -t
     else
         echo -e "${RED}No records found.${RESET}"
     fi
-    echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+
+    echo -e "${LINE}${LINE}${LINE}"
     read -p "Press Enter to return to menu..."
 }
 
 # Search star by name
 search_star() {
     header
-    echo "SEARCH STAR"
-    read -p "Enter name: " key
-    result=$(grep -i "$key" "$DATA_FILE")
-    if [ "$result" ]; then
-        echo "Matching Result:"
-        echo "$result" | column -s '|' -t
+    echo -e "${TAB}${YELLOW}SEARCH STAR${RESET}"
+    read -p " Enter star name (exact): " key
+    key=$(echo "$key" | xargs)  # Trim spaces
+
+    # Search for exact name match (case-insensitive)
+    result=$(awk -F'|' -v k="$key" 'BEGIN{IGNORECASE=1} tolower($2) == tolower(k)' "$DATA_FILE")
+
+    if [ -n "$result" ]; then
+        echo -e " ${LINE}${LINE}${LINE}"
+        echo -e "\n ${GREEN}Matching Result:${RESET}\n"
+        echo -e " ${LINE}${LINE}${LINE}"
+
+        # Process and print each matching line
+        echo "$result" | while IFS='|' read -r id name type distance desc; do
+            echo " ID:          $id"
+            echo " Name:        $name"
+            echo " Type:        $type"
+            echo " Distance:    $distance km"
+            echo " Description: $desc"
+            echo -e "${LINE}${LINE}${LINE}"
+        done
     else
-        echo -e "${RED}Star not found!${RESET}"
+        echo -e " ${RED}Star not found!${RESET}"
     fi
-    read -p "Press Enter to return to menu..."
+
+    echo
+    read -p " Press Enter to return to menu..."
 }
 
 # Edit star info
@@ -159,9 +191,26 @@ distance_star() {
     read -p "Press Enter to return to menu..."
 }
 
-# Main Program
-login
-while true; do
+signUpMenu() {
+    header
+    echo "${TAB}Login Menu"
+    echo "${TAB}${LINE}"
+    echo -e "${TAB}${WHITE}[1]${RESET} Login"
+    echo -e "${TAB}${WHITE}[2]${RESET} Exit"
+    echo "${TAB}${LINE}"
+    echo -n "${TAB}Choose an option [1-2]: "
+
+    read choice
+    case $choice in
+        1) login ;;
+        2) exit ;;
+        *) echo -e "${TAB}${RED}Invalid input${RESET}"; sleep 1 ;;
+    esac
+}
+
+mainMenu() {
+  while true; do
+    header
     menu
     read choice
     case $choice in
@@ -171,7 +220,20 @@ while true; do
         4) edit_star ;;
         5) delete_star ;;
         6) distance_star ;;
-        7) echo "Goodbye, explorer!"; exit ;;
-        *) echo -e "${RED}Invalid input${RESET}"; sleep 1 ;;
+        7) signUpMenu ;;
+        8) echo -e "${TAB}${GREEN}Thanks for using Nebula Navigator"${RESET}; exit ;;
+        *) echo -e "${TAB}${RED}Invalid input${RESET}"; sleep 1 ;;
     esac
-done
+  done
+}
+
+# Main Program
+function main() {
+  while true; do
+      mainMenu
+  done
+}
+
+main
+
+
