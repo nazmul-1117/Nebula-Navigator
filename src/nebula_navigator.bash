@@ -1,13 +1,10 @@
 #!/bin/bash
 
-# File paths
 USERS_FILE="../data/users.txt"
 DATA_FILE="../data/data.txt"
 
-# Current user
 CURRENT_USER=""
 
-# Colors
 RED="\e[31m"
 GREEN="\e[32m"
 YELLOW="\e[33m"
@@ -20,7 +17,6 @@ RESET="\e[0m"
 TAB="$(printf '\t\t\t\t\t')"
 LINE="$(printf '=%.0s' {1..40})"
 
-# Terminal width
 TERM_WIDTH=$(tput cols)
 SCREEN_WIDTH=$(( term_width * 70 / 100 ))
 
@@ -48,7 +44,6 @@ login() {
             CURRENT_USER="$username"
             sleep 1
             mainMenu
-            # return 0
         else
             echo -e "${TAB}${RED}Invalid credentials!${RESET}"
             ((attempts++))
@@ -68,7 +63,7 @@ menu() {
     echo -e "${TAB}${BLUE}[4]${RESET} Edit Star Info"
     echo -e "${TAB}${RED}[5]${RESET} Delete Star"
     echo -e "${TAB}${GREEN}[6]${RESET} Show Distance of a Star"
-    echo -e "${TAB}${WHITE}[7]${RESET} Logout"
+    echo -e "${TAB}${MAGENTA}[7]${RESET} Logout"
     echo -e "${TAB}${WHITE}[8]${RESET} Exit"
     echo "${TAB}${LINE}"
     echo -n "${TAB}Choose an option [1-8]: "
@@ -110,9 +105,8 @@ search_star() {
     header
     echo -e "${TAB}${YELLOW}SEARCH STAR${RESET}"
     read -p " Enter star name (exact): " key
-    key=$(echo "$key" | xargs)  # Trim spaces
+    key=$(echo "$key" | xargs)
 
-    # Search for exact name match (case-insensitive)
     result=$(awk -F'|' -v k="$key" 'BEGIN{IGNORECASE=1} tolower($2) == tolower(k)' "$DATA_FILE")
 
     if [ -n "$result" ]; then
@@ -120,7 +114,6 @@ search_star() {
         echo -e "\n ${GREEN}Matching Result:${RESET}\n"
         echo -e " ${LINE}${LINE}${LINE}"
 
-        # Process and print each matching line
         echo "$result" | while IFS='|' read -r id name type distance desc; do
             echo " ID:          $id"
             echo " Name:        $name"
@@ -173,7 +166,6 @@ delete_star() {
         
         read -p "Are you sure you want to delete this star? (y/n): " confirm
         if [[ "$confirm" =~ ^[Yy]$ ]]; then
-            # Ask for the current user’s password again
             echo -e -n "${RED}Enter your password to confirm: ${RED}"
             read password
             echo
@@ -199,7 +191,6 @@ distance_star() {
     echo "DISTANCE CHECK"
     read -p "Enter Star Name: " name
     
-    # Case-insensitive search
     match=$(grep -i "$name" "$DATA_FILE")
     
     if [ "$match" ]; then
@@ -210,7 +201,6 @@ distance_star() {
         echo "Sorting all stars by distance..."
         echo -e "${LINE}${LINE}${LINE}"
         
-        # Sort by distance column (field 4) numerically, print only ID, Name, Distance
         sort -t "|" -k4 -n "$DATA_FILE" | awk -F "|" '{print "ID: "$1" | Name: "$2" | Distance: "$4" " "ly"}'
     else
         echo -e "${RED}Star not found!${RESET}"
@@ -255,11 +245,9 @@ mainMenu() {
   done
 }
 
-# Main Program
 function main() {
   while true; do
       signUpMenu
-      # mainMenu
   done
 }
 

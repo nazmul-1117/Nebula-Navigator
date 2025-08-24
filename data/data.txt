@@ -18,33 +18,5 @@
 018|Procyon A|Main Sequence|11.4|Bright star
 019|Procyon B|White Dwarf|11.4|Companion star
 020|61 Cygni A|K-type Main Sequence|11.4|Binary star
-021|61 Cygni B|K-type Main Sequence|11.4|Companion star
-022|Struve 2398 A|Red Dwarf|11.5|Binary star
-023|Struve 2398 B|Red Dwarf|11.5|Companion star
-024|Epsilon Indi A|K-type Main Sequence|11.9|Nearby star
-025|Epsilon Indi Ba|Brown Dwarf|11.9|Companion star
-026|Epsilon Indi Bb|Brown Dwarf|11.9|Companion star
-027|Tau Ceti|G-type Main Sequence|11.9|Sun-like star
-028|Kapteyn's Star|Red Subdwarf|12.8|High proper motion
-029|Kruger 60 A|Red Dwarf|13.1|Binary star
-030|Kruger 60 B|Red Dwarf|13.1|Companion star
-031|Wolf 1061|Red Dwarf|14.1|Nearby dwarf
-032|Lalande 21185|Red Dwarf|8.3|Nearby dwarf
-033|Altair|Main Sequence|16.7|Bright star
-034|Fomalhaut|A-type Main Sequence|25|Bright star
-035|Vega|A-type Main Sequence|25|Lyra star
-036|Arcturus|Red Giant|36.7|Bright giant
-037|Capella|G-type Giant|42.9|Binary giant
-038|Aldebaran|Red Giant|65|Taurus eye
-039|Spica|Blue Giant|250|Binary system
-040|Regulus|Blue-White Main Sequence|79|Leo star
-041|Deneb|Blue Supergiant|2600|Cygnus bright
-042|Betelgeuse|Red Supergiant|642|Orion giant
-043|Rigel|Blue Supergiant|860|Orion bright
-044|Polaris|Yellow Supergiant|433|North Star
-045|Antares|Red Supergiant|550|Scorpius heart
-046|Canopus|Bright Giant|310|Carina star
-047|Bellatrix|Blue Giant|250|Orion star
-048|Saiph|Blue Supergiant|720|Orion star
-049|Mimosa|Blue Giant|350|Crux star
-050|Alnitak|Blue Supergiant|1260|Orion belt
+021|nazmul|big|12|lightweight
+022|Hh|sas|12|mjg
